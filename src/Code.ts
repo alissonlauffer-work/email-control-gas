@@ -2,12 +2,12 @@
  * Logs email subjects from Gmail threads matching a specific search query
  * Processes emails in batches to handle large volumes efficiently
  */
-function logEmailSubjectsBatch(): void {
-  const query: string =
+function logEmailSubjectsBatch() {
+  const query =
     'subject:"hs consórcios enviou um documento para você assinar" -lembrete transferência';
-  const batchSize: number = 100; // Gmail search limit per call
-  let start: number = 0;
-  let totalEmails: number = 0;
+  const batchSize = 100; // Gmail search limit per call
+  let start = 0;
+  let totalEmails = 0;
 
   while (true) {
     // Fetch threads in batches
