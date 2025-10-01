@@ -18,11 +18,16 @@ function logEmailSubjectsBatch() {
       break;
     }
 
-    // Process each thread and log the subject of each message
+    // Process each thread and extract proposal numbers from subjects
     const messages = GmailApp.getMessagesForThreads(threads);
     messages.forEach((thread) => {
       thread.forEach((message) => {
-        console.log("Subject:", message.getSubject());
+        const subject = message.getSubject();
+        // Extract proposal number from subject (numbers after dash at the end)
+        const match = subject.match(/-\s*(\d+)$/);
+        if (match) {
+          console.log(match[1]); // Log only the proposal number
+        }
       });
     });
 
