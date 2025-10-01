@@ -1,0 +1,19 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "vcs": {
+    "clientKind": "git",
+    "enabled": true,
+    "useIgnoreFile": true
+  },
+  "formatter": {
+    "lineWidth": 99,
+    "useEditorconfig": true
+  },
+  "linter": {
+    "rules": {
+      "correctness": {
+        "noUnusedVariables": "off"
+      }
+    }
+  }
+}

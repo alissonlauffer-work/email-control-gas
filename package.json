@@ -1,0 +1,25 @@
+{
+  "name": "email-control-gas",
+  "version": "1.0.0",
+  "description": "Google Apps Script project for email control",
+  "main": "dist/Code.js",
+  "scripts": {
+    "build": "rm dist/* && tsc && cp appsscript.json dist/",
+    "watch": "tsc --watch",
+    "push": "clasp push",
+    "deploy": "npm run build && @google/clasp push"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.2.4",
+    "@google/clasp": "^3.0.6-alpha",
+    "@types/google-apps-script": "^2.0.4",
+    "typescript": "^5.9.3"
+  },
+  "keywords": [
+    "google-apps-script",
+    "typescript",
+    "gmail"
+  ],
+  "author": "",
+  "license": "MIT"
+}
