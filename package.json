@@ -10,7 +10,7 @@
     "deploy": "npm run build && @google/clasp push"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.2.4",
+    "@biomejs/biome": "^2.2.5",
     "@google/clasp": "^3.0.6-alpha",
     "@types/google-apps-script": "^2.0.4",
     "typescript": "^5.9.3"
