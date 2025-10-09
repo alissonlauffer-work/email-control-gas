@@ -47,7 +47,13 @@ function processNewProposals(): void {
   console.log("Iniciando processamento de emails para encontrar novas propostas");
 
   // Validate that the sheet email matches the logged Gmail account
-  validateSheetEmail();
+  const isValidEmail = validateSheetEmail();
+
+  // Stop processing if validation fails
+  if (!isValidEmail) {
+    console.log("Email validation failed. Stopping proposal processing.");
+    return;
+  }
 
   // Get the active spreadsheet and sheet for data operations
   const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
