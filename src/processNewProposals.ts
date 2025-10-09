@@ -46,6 +46,9 @@ const BATCH_SIZE: number = 100;
 function processNewProposals(): void {
   console.log("Iniciando processamento de emails para encontrar novas propostas");
 
+  // Validate that the sheet email matches the logged Gmail account
+  validateSheetEmail();
+
   // Get the active spreadsheet and sheet for data operations
   const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = spreadsheet.getActiveSheet();
