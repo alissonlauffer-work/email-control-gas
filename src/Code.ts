@@ -100,7 +100,9 @@ function processNewProposals(): void {
 
     // Inverter para manter ordem cronológica (mais antiga para mais recente)
     newerProposals.reverse().forEach((proposalNumber) => {
-      sheet.appendRow([proposalNumber, new Date().toISOString()]);
+      const today = new Date();
+      const formattedDate = today.toLocaleDateString("pt-BR");
+      sheet.appendRow([proposalNumber, "", "", "", formattedDate]);
     });
 
     console.log("Adicionadas novas propostas à planilha:");
