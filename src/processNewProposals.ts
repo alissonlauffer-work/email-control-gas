@@ -129,20 +129,21 @@ function processNewProposals(): void {
     console.log(`Encontradas ${newerProposals.length} novas propostas para adicionar`);
 
     // Reverse to maintain chronological order (oldest to newest)
-    // and add each proposal with email received date to the spreadsheet
-    newerProposals.reverse().forEach((proposal) => {
+    // and prepare data for batch insertion
+    const proposalsToAdd = newerProposals.reverse().map((proposal) => {
       const formattedDate = proposal.date.toLocaleDateString("pt-BR");
-      // Add row with: proposal number, empty columns, and email received date
-      sheet.appendRow([proposal.number, "", "", "", formattedDate]);
+      // Return row data: proposal number, empty columns, and email received date
+      return [proposal.number, "", "", "", formattedDate];
     });
 
+    // Get the next empty row to start inserting data
+    const startRow = sheet.getLastRow() + 1;
+
+    // Insert all rows at once using setValues for better performance
+    sheet.getRange(startRow, 1, proposalsToAdd.length, 5).setValues(proposalsToAdd);
+
     console.log("Adicionadas novas propostas à planilha:");
-    console.log(
-      newerProposals
-        .map((p) => p.number)
-        .reverse()
-        .join("\n"),
-    );
+    console.log(newerProposals.map((p) => p.number).join("\n"));
   } else {
     console.log("Nenhuma nova proposta encontrada");
   }
