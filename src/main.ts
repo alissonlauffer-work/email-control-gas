@@ -10,8 +10,7 @@
  */
 
 // Global menu reference that will be used across the application
-const mainMenu = SpreadsheetApp.getUi()
-    .createMenu("Ferramentas adicionais");
+const mainMenu = SpreadsheetApp.getUi().createMenu("Ferramentas adicionais");
 
 /**
  * Function that runs when the spreadsheet is opened.

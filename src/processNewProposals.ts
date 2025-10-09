@@ -64,7 +64,7 @@ function processNewProposals(): void {
   }
 
   // Initialize variables for batch processing
-  const allProposalNumbers: string[] = [];
+  const allProposals: { number: string; date: Date }[] = [];
   let start = 0;
   let totalEmails = 0;
 
@@ -81,19 +81,23 @@ function processNewProposals(): void {
     // Get all messages from the found threads
     const messages = GmailApp.getMessagesForThreads(threads);
 
-    // Extract proposal numbers from all message subjects using regex
+    // Extract proposal numbers and dates from all message subjects using regex
     // Pattern matches: "-<number>" at the end of the subject line
     messages.flat().forEach((message) => {
       const match = message.getSubject().match(/-\s*(\d+)$/);
       if (match) {
-        allProposalNumbers.push(match[1]);
+        // Convert Google Apps Script Date to JavaScript Date
+        const gasDate = message.getDate();
+        const emailDate = new Date(gasDate.getTime());
+        // Store proposal number and date as an object
+        allProposals.push({ number: match[1], date: emailDate });
       }
     });
 
     totalEmails += messages.flat().length;
 
     // Stop if we find our target proposal number (prevents unnecessary processing)
-    if (allProposalNumbers.some((num) => parseInt(num, 10) === targetProposalNumber)) {
+    if (allProposals.some((proposal) => parseInt(proposal.number, 10) === targetProposalNumber)) {
       console.log(`Encontrado número de proposta alvo: ${targetProposalNumber}`);
       break;
     }
@@ -102,31 +106,34 @@ function processNewProposals(): void {
     start += BATCH_SIZE;
   }
 
-  // Find the index of our target proposal in the collected numbers
-  const targetIndex = allProposalNumbers.findIndex(
-    (num) => parseInt(num, 10) === targetProposalNumber,
+  // Find the index of our target proposal in the collected proposals
+  const targetIndex = allProposals.findIndex(
+    (proposal) => parseInt(proposal.number, 10) === targetProposalNumber,
   );
 
   // Get newer proposals (those that come before the target in reverse chronological order)
   // Gmail returns emails in reverse chronological order, so newer proposals appear first
-  const newerProposals =
-    targetIndex !== -1 ? allProposalNumbers.slice(0, targetIndex) : allProposalNumbers;
+  const newerProposals = targetIndex !== -1 ? allProposals.slice(0, targetIndex) : allProposals;
 
   // Add new proposals to the spreadsheet if any were found
   if (newerProposals.length > 0) {
     console.log(`Encontradas ${newerProposals.length} novas propostas para adicionar`);
 
     // Reverse to maintain chronological order (oldest to newest)
-    // and add each proposal with current date to the spreadsheet
-    newerProposals.reverse().forEach((proposalNumber) => {
-      const today = new Date();
-      const formattedDate = today.toLocaleDateString("pt-BR");
-      // Add row with: proposal number, empty columns, and current date
-      sheet.appendRow([proposalNumber, "", "", "", formattedDate]);
+    // and add each proposal with email received date to the spreadsheet
+    newerProposals.reverse().forEach((proposal) => {
+      const formattedDate = proposal.date.toLocaleDateString("pt-BR");
+      // Add row with: proposal number, empty columns, and email received date
+      sheet.appendRow([proposal.number, "", "", "", formattedDate]);
     });
 
     console.log("Adicionadas novas propostas à planilha:");
-    console.log(newerProposals.reverse().join("\n"));
+    console.log(
+      newerProposals
+        .map((p) => p.number)
+        .reverse()
+        .join("\n"),
+    );
   } else {
     console.log("Nenhuma nova proposta encontrada");
   }
@@ -134,14 +141,15 @@ function processNewProposals(): void {
   // Log processing summary for debugging and monitoring
   console.log("\n=== RESUMO DO PROCESSAMENTO ===");
   console.log(`Total de emails processados: ${totalEmails}`);
-  console.log(`Total de números de proposta encontrados: ${allProposalNumbers.length}`);
+  console.log(`Total de números de proposta encontrados: ${allProposals.length}`);
   console.log(`Novas propostas adicionadas: ${newerProposals.length}`);
 
   // Show completion message to user with appropriate feedback
   const ui = SpreadsheetApp.getUi();
-  const message = newerProposals.length > 0
-    ? `Processamento concluído!\n\n${newerProposals.length} nova(s) proposta(s) adicionada(s) à planilha.\n\nTotal de emails processados: ${totalEmails}`
-    : `Processamento concluído!\n\nNenhuma nova proposta encontrada.\n\nTotal de emails processados: ${totalEmails}`;
+  const message =
+    newerProposals.length > 0
+      ? `Processamento concluído!\n\n${newerProposals.length} nova(s) proposta(s) adicionada(s) à planilha.\n\nTotal de emails processados: ${totalEmails}`
+      : `Processamento concluído!\n\nNenhuma nova proposta encontrada.\n\nTotal de emails processados: ${totalEmails}`;
 
   ui.alert(message);
 }
@@ -157,7 +165,5 @@ function processNewProposals(): void {
  * @returns void
  */
 function addMenuControls(): void {
-  mainMenu
-    .addItem("Processar Novas Propostas", "processNewProposals")
-    .addToUi();
+  mainMenu.addItem("Processar Novas Propostas", "processNewProposals").addToUi();
 }
