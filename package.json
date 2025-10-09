@@ -1,13 +1,13 @@
 {
   "name": "email-control-gas",
   "version": "1.0.0",
-  "description": "Google Apps Script project for email control",
-  "main": "dist/Code.js",
+  "description": "Google Apps Script project for automated email processing and proposal tracking from HS Consórcios document signing emails",
+  "main": "dist/main.js",
   "scripts": {
     "build": "rm dist/* && tsc && cp appsscript.json dist/",
     "watch": "tsc --watch",
     "push": "clasp push",
-    "deploy": "npm run build && @google/clasp push"
+    "deploy": "bun run build && clasp push"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.5",
@@ -18,8 +18,12 @@
   "keywords": [
     "google-apps-script",
     "typescript",
-    "gmail"
+    "gmail",
+    "email-processing",
+    "proposal-tracking",
+    "hs-consorcios",
+    "automation"
   ],
-  "author": "",
-  "license": "MIT"
+  "author": "Email Control Gas Team",
+  "license": "UNLICENSED"
 }
