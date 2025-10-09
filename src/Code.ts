@@ -1,56 +1,72 @@
 /**
- * @fileoverview Gmail Email Processor for HS Consórcios Documents
+ * @fileoverview Processador de Email Gmail para Documentos HS Consórcios
  *
- * This Apps Script processes Gmail threads to extract proposal numbers from
- * HS Consórcios document signing emails. It filters and displays proposal
- * numbers that come after a specified target number, showing them in
- * chronological order (oldest to newest).
+ * Este Apps Script processa threads do Gmail para extrair números de propostas de
+ * emails de assinatura de documentos HS Consórcios. Lê o último número de proposta
+ * da coluna A da planilha e adiciona novas propostas após ele.
+/**
+ * Cria um menu personalizado na interface do Google Sheets quando a planilha é aberta.
  */
+function onOpen(): void {
+  SpreadsheetApp.getUi()
+    .createMenu("Controle de Email")
+    .addItem("Processar Novas Propostas", "processNewProposals")
+    .addToUi();
+}
 
 /**
- * The target proposal number to start filtering from.
- * All proposal numbers greater than this value will be displayed.
- * Modify this constant to change the filtering threshold.
- */
-const TARGET_PROPOSAL_NUMBER: number = 310165;
-
-/**
- * Gmail search query to find HS Consórcios document signing emails.
- * Excludes reminder transfer emails to focus only on new document requests.
+ * Query de busca do Gmail para encontrar emails de assinatura de documentos HS Consórcios.
+ * Exclui emails de lembrete de transferência para focar apenas em novas solicitações de documentos.
  */
 const GMAIL_SEARCH_QUERY: string =
   'subject:"hs consórcios enviou um documento para você assinar" -lembrete transferência';
 
 /**
- * Maximum number of threads to fetch in a single Gmail API call.
- * Gmail API has a limit of 100 threads per search request.
+ * Número máximo de threads para buscar em uma única chamada da API do Gmail.
+ * A API do Gmail tem um limite de 100 threads por solicitação de busca.
  */
 const BATCH_SIZE: number = 100;
 
 /**
- * Processes Gmail threads to extract and filter proposal numbers from HS Consórcios emails.
+ * Processa threads do Gmail para extrair e adicionar novos números de propostas à planilha.
  *
- * Logs the filtered proposal numbers to the console
+ * Lê o último número de proposta da coluna A e adiciona quaisquer novas propostas encontradas nos emails.
  */
-function logEmailSubjectsBatch(): void {
-  console.log(`Starting email processing with target proposal number: ${TARGET_PROPOSAL_NUMBER}`);
+function processNewProposals(): void {
+  console.log("Iniciando processamento de emails para encontrar novas propostas");
+
+  // Obter a planilha e a aba
+  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = spreadsheet.getActiveSheet();
+
+  // Obter o último número de proposta da coluna A
+  const lastRow = sheet.getLastRow();
+  let targetProposalNumber: number = 0;
+
+  if (lastRow > 0) {
+    const lastProposalValue = sheet.getRange(lastRow, 1).getValue();
+    targetProposalNumber = parseInt(lastProposalValue.toString(), 10) || 0;
+    console.log(`Encontrado último número de proposta na planilha: ${targetProposalNumber}`);
+  } else {
+    console.log("Nenhuma proposta existente encontrada na planilha");
+  }
 
   const allProposalNumbers: string[] = [];
   let start = 0;
   let totalEmails = 0;
 
-  // Process emails in batches until we find the target number
+  // Processar emails em lotes até encontrar o número alvo
   while (true) {
     const threads = GmailApp.search(GMAIL_SEARCH_QUERY, start, BATCH_SIZE);
 
     if (threads.length === 0) {
-      console.log("No more threads found in Gmail search");
+      console.log("Nenhum thread adicional encontrado na busca do Gmail");
       break;
     }
 
     const messages = GmailApp.getMessagesForThreads(threads);
 
-    // Extract proposal numbers from all messages
+    // Extrair números de propostas de todas as mensagens
     messages.flat().forEach((message) => {
       const match = message.getSubject().match(/-\s*(\d+)$/);
       if (match) {
@@ -60,32 +76,41 @@ function logEmailSubjectsBatch(): void {
 
     totalEmails += messages.flat().length;
 
-    // Stop if we found our target number
-    if (allProposalNumbers.some((num) => parseInt(num, 10) === TARGET_PROPOSAL_NUMBER)) {
-      console.log(`Found target proposal number: ${TARGET_PROPOSAL_NUMBER}`);
+    // Parar se encontrarmos nosso número alvo
+    if (allProposalNumbers.some((num) => parseInt(num, 10) === targetProposalNumber)) {
+      console.log(`Encontrado número de proposta alvo: ${targetProposalNumber}`);
       break;
     }
 
     start += BATCH_SIZE;
   }
 
-  // Find the target index and filter numbers after it
+  // Encontrar o índice alvo e filtrar números após ele (propostas mais recentes)
   const targetIndex = allProposalNumbers.findIndex(
-    (num) => parseInt(num, 10) === TARGET_PROPOSAL_NUMBER,
+    (num) => parseInt(num, 10) === targetProposalNumber,
   );
-  const filteredNumbers =
-    targetIndex !== -1 ? allProposalNumbers.slice(0, targetIndex).reverse() : [];
 
-  // Output results
-  console.log("\n=== PROPOSAL NUMBERS AFTER TARGET ===");
-  if (filteredNumbers.length > 0) {
-    console.log(filteredNumbers.join("\n"));
+  // Obter propostas mais recentes (aquelas que vêm antes do alvo em ordem cronológica reversa)
+  const newerProposals =
+    targetIndex !== -1 ? allProposalNumbers.slice(0, targetIndex) : allProposalNumbers;
+
+  // Adicionar novas propostas à planilha
+  if (newerProposals.length > 0) {
+    console.log(`Encontradas ${newerProposals.length} novas propostas para adicionar`);
+
+    // Inverter para manter ordem cronológica (mais antiga para mais recente)
+    newerProposals.reverse().forEach((proposalNumber) => {
+      sheet.appendRow([proposalNumber, new Date().toISOString()]);
+    });
+
+    console.log("Adicionadas novas propostas à planilha:");
+    console.log(newerProposals.reverse().join("\n"));
   } else {
-    console.log("No proposal numbers found after the target number");
+    console.log("Nenhuma nova proposta encontrada");
   }
 
-  console.log("\n=== PROCESSING SUMMARY ===");
-  console.log(`Total emails processed: ${totalEmails}`);
-  console.log(`Total proposal numbers found: ${allProposalNumbers.length}`);
-  console.log(`Proposal numbers shown: ${filteredNumbers.length}`);
+  console.log("\n=== RESUMO DO PROCESSAMENTO ===");
+  console.log(`Total de emails processados: ${totalEmails}`);
+  console.log(`Total de números de proposta encontrados: ${allProposalNumbers.length}`);
+  console.log(`Novas propostas adicionadas: ${newerProposals.length}`);
 }
