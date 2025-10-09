@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Google Apps Script project for automated email processing and proposal tracking from HS Consórcios document signing emails",
   "main": "dist/main.js",
+  "private": true,
   "scripts": {
     "build": "rm dist/* && tsc && cp appsscript.json dist/",
     "watch": "tsc --watch",
@@ -12,7 +13,7 @@
   "devDependencies": {
     "@biomejs/biome": "^2.2.5",
     "@google/clasp": "^3.0.6-alpha",
-    "@types/google-apps-script": "^2.0.4",
+    "@types/google-apps-script": "^2.0.5",
     "typescript": "^5.9.3"
   },
   "keywords": [
