@@ -21,8 +21,38 @@ const GMAIL_SEARCH_QUERY: string =
   'subject:"hs consórcios enviou um documento para você assinar" -lembrete transferência';
 
 // Maximum number of threads to fetch in a single Gmail API call
-// Gmail API has a limit of 100 threads per search request
-const BATCH_SIZE: number = 100;
+// Gmail API has a limit of 50 threads per search request
+const BATCH_SIZE: number = 50;
+
+/**
+ * Finds the true last row with data, handling vertically merged cells.
+ *
+ * When cells are vertically merged, Google Sheets only stores the value in the top cell
+ * of the merged range. This function searches backwards from the sheet's last row to find
+ * the actual last row containing data, accounting for merged cells.
+ *
+ * @param sheet The Google Sheets sheet object to search
+ * @param column The column number to check (1-indexed, defaults to column A)
+ * @returns The row number of the last cell with actual data
+ */
+function getTrueLastRow(sheet: GoogleAppsScript.Spreadsheet.Sheet, column: number = 1): number {
+  const lastRow = sheet.getLastRow();
+
+  // If no data exists, return 0
+  if (lastRow === 0) {
+    return 0;
+  }
+
+  // Search backwards from the last row to find the first non-empty cell
+  for (let row = lastRow; row >= 1; row--) {
+    const cellValue = sheet.getRange(row, column).getValue();
+    if (cellValue && cellValue.toString().trim() !== "") {
+      return row;
+    }
+  }
+
+  return 0;
+}
 
 /**
  * Processes Gmail threads to extract and add new proposal numbers to the spreadsheet.
@@ -40,6 +70,7 @@ const BATCH_SIZE: number = 100;
  * - No matching emails found
  * - Large email volumes (processes in batches)
  * - Various email subject formats
+ * - Vertically merged cells in the spreadsheet
  *
  * @returns void
  */
@@ -60,7 +91,8 @@ function processNewProposals(): void {
   const sheet = spreadsheet.getActiveSheet();
 
   // Get the last proposal number from column A to establish our baseline
-  const lastRow = sheet.getLastRow();
+  // Use getTrueLastRow to handle vertically merged cells properly
+  const lastRow = getTrueLastRow(sheet, 1);
   let targetProposalNumber: number = 0;
 
   if (lastRow > 0) {
