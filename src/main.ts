@@ -12,6 +12,9 @@
 // Global menu reference that will be used across the application
 const mainMenu = SpreadsheetApp.getUi().createMenu("Ferramentas adicionais");
 
+// Import the signed proposal menu function
+// Note: In Google Apps Script, functions are globally available
+
 /**
  * Function that runs when the spreadsheet is opened.
  * This is the main entry point that initializes the application by:
@@ -24,4 +27,5 @@ const mainMenu = SpreadsheetApp.getUi().createMenu("Ferramentas adicionais");
 function onOpen(e: GoogleAppsScript.Events.SheetsOnOpen): void {
   moveToLastRow(e);
   addMenuControls();
+  addSignedProposalMenu();
 }
