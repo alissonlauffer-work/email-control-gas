@@ -11,7 +11,7 @@
     "deploy": "bun run build && clasp push"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.2.5",
+    "@biomejs/biome": "^2.2.6",
     "@google/clasp": "^3.0.6-alpha",
     "@types/google-apps-script": "^2.0.5",
     "typescript": "^5.9.3"
