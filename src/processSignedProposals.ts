@@ -163,11 +163,7 @@ function processSignedProposals(): void {
       console.log(
         `Todas as propostas no chunk ${totalChunksProcessed + 1} já estão marcadas como 'ok'. Interrompendo processamento precoce.`,
       );
-      const ui = SpreadsheetApp.getUi();
-      ui.alert(
-        `Todas as ${signedProposals.length} propostas encontradas no chunk ${totalChunksProcessed + 1} já estavam marcadas como "ok".\n\nProcessamento interrompido precocemente.`,
-      );
-      return;
+      break;
     }
 
     console.log(
