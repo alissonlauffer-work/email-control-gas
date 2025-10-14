@@ -26,6 +26,4 @@ const mainMenu = SpreadsheetApp.getUi().createMenu("Ferramentas adicionais");
  */
 function onOpen(e: GoogleAppsScript.Events.SheetsOnOpen): void {
   moveToLastRow(e);
-  addMenuControls();
-  addSignedProposalMenu();
 }

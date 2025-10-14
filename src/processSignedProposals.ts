@@ -158,6 +158,11 @@ function processSignedProposals(): void {
       }
     });
 
+    console.log(
+      `Chunk ${totalChunksProcessed + 1} concluído: ${chunkUpdatedCount} propostas atualizadas`,
+    );
+    totalChunksProcessed++;
+
     // Short circuit: if no proposals needed updating in this chunk, stop processing early
     if (chunkUpdatedCount === 0 && signedProposals.length > 0) {
       console.log(
@@ -165,11 +170,6 @@ function processSignedProposals(): void {
       );
       break;
     }
-
-    console.log(
-      `Chunk ${totalChunksProcessed + 1} concluído: ${chunkUpdatedCount} propostas atualizadas`,
-    );
-    totalChunksProcessed++;
   }
 
   // Check if any emails were processed at all
@@ -203,14 +203,4 @@ function processSignedProposals(): void {
   ui.alert(message);
 }
 
-/**
- * Adds the signed proposal processing menu item.
- *
- * This function adds a menu item to the custom menu that allows users
- * to trigger the signed proposal processing functionality.
- *
- * @returns void
- */
-function addSignedProposalMenu(): void {
-  mainMenu.addItem("Marcar Propostas Assinadas", "processSignedProposals").addToUi();
-}
+mainMenu.addItem("Marcar Propostas Assinadas", "processSignedProposals").addToUi();

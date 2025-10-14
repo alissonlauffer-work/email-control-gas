@@ -196,16 +196,4 @@ function processNewProposals(): void {
   ui.alert(message);
 }
 
-/**
- * Creates the custom menu in the Google Sheets interface.
- *
- * This function adds a custom menu item to the spreadsheet's menu bar
- * that allows users to trigger the proposal processing functionality.
- * The menu appears as "Ferramentas adicionais" with a submenu item
- * "Processar Novas Propostas" that calls the processNewProposals function.
- *
- * @returns void
- */
-function addMenuControls(): void {
-  mainMenu.addItem("Processar Novas Propostas", "processNewProposals").addToUi();
-}
+mainMenu.addItem("Processar Novas Propostas", "processNewProposals").addToUi();
