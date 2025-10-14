@@ -19,7 +19,6 @@ const mainMenu = SpreadsheetApp.getUi().createMenu("Ferramentas adicionais");
  * Function that runs when the spreadsheet is opened.
  * This is the main entry point that initializes the application by:
  * 1. Moving the cursor to the last available row
- * 2. Adding custom menu controls for user interaction
  *
  * @param e The event object passed by Google Apps Script when the spreadsheet opens
  * @returns void
