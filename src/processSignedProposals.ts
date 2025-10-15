@@ -20,7 +20,7 @@ const GMAIL_SIGNED_SEARCH_QUERY: string =
   'subject:"O documento Transferência de Cotas" subject:"foi assinado por todos."';
 
 // Maximum number of emails to process (as requested)
-const MAX_EMAILS_TO_PROCESS: number = 200;
+const MAX_EMAILS_TO_PROCESS: number = 500;
 
 // Chunk size for processing emails
 const EMAIL_CHUNK_SIZE: number = 50;
