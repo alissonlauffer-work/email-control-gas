@@ -5,7 +5,7 @@
       "name": "email-control-gas",
       "devDependencies": {
         "@biomejs/biome": "^2.2.6",
-        "@google/clasp": "^3.0.6-alpha",
+        "@google/clasp": "^3.1.0",
         "@types/google-apps-script": "^2.0.5",
         "typescript": "^5.9.3",
       },
@@ -46,7 +46,7 @@
 
     "@formatjs/intl-localematcher": ["@formatjs/intl-localematcher@0.6.1", "", { "dependencies": { "tslib": "^2.8.0" } }, "sha512-ePEgLgVCqi2BBFnTMWPfIghu6FkbZnnBVhO2sSxvLfrdFw7wCHAHiDoM2h4NRgjbaY7+B7HgOLZGkK187pZTZg=="],
 
-    "@google/clasp": ["@google/clasp@3.0.6-alpha", "", { "dependencies": { "@formatjs/intl": "^3.1.6", "@modelcontextprotocol/sdk": "^1.12.1", "chalk": "^5.4.1", "chokidar": "^4.0.3", "cli-truncate": "^4.0.0", "commander": "^13.1.0", "debug": "^4.4.0", "fdir": "^6.4.4", "find-up": "^7.0.0", "fuzzy": "^0.1.3", "google-auth-library": "^9.15.1", "googleapis": "^148.0.0", "googleapis-common": "7.2.0", "inflection": "^3.0.2", "inquirer": "^12.6.0", "inquirer-autocomplete-standalone": "^0.8.1", "loud-rejection": "^2.2.0", "micromatch": "^4.0.8", "normalize-path": "^3.0.0", "open": "^10.1.2", "ora": "^8.1.1", "p-map": "^7.0.3", "picomatch": "^4.0.2", "read-package-up": "^11.0.0", "server-destroy": "^1.0.1", "split-lines": "^3.0.0", "strip-bom": "^5.0.0", "zod": "^3.25.36" }, "bin": { "clasp": "build/src/index.js" } }, "sha512-u/knNJEsDf8AS8ofDcRfXvgXuI1fc8K5qeCRpGE8a2632uee6RyK9AUXvTOEGucmIR5q5Ut9k5sqsYpb1VaU8A=="],
+    "@google/clasp": ["@google/clasp@3.1.0", "", { "dependencies": { "@formatjs/intl": "^3.1.6", "@modelcontextprotocol/sdk": "^1.12.1", "chalk": "^5.4.1", "chokidar": "^4.0.3", "cli-truncate": "^4.0.0", "commander": "^13.1.0", "debug": "^4.4.0", "fdir": "^6.4.4", "find-up": "^7.0.0", "fuzzy": "^0.1.3", "google-auth-library": "^9.15.1", "googleapis": "^148.0.0", "googleapis-common": "7.2.0", "inflection": "^3.0.2", "inquirer": "^12.6.0", "inquirer-autocomplete-standalone": "^0.8.1", "loud-rejection": "^2.2.0", "micromatch": "^4.0.8", "normalize-path": "^3.0.0", "open": "^10.1.2", "ora": "^8.1.1", "p-map": "^7.0.3", "picomatch": "^4.0.2", "read-package-up": "^11.0.0", "server-destroy": "^1.0.1", "split-lines": "^3.0.0", "strip-bom": "^5.0.0", "zod": "^3.25.36" }, "bin": { "clasp": "build/src/index.js" } }, "sha512-tED/GnAaUPhLeULeiWJgDUDQ7L91BoC/6bePb6pUKDXaL4PwPMQtIiCUMLqFbaByq4wa5VgxJIbOIwC7/WxUdw=="],
 
     "@inquirer/ansi": ["@inquirer/ansi@1.0.0", "", {}, "sha512-JWaTfCxI1eTmJ1BIv86vUfjVatOdxwD0DAVKYevY8SazeUUZtW+tNbsdejVO1GYE0GXJW1N1ahmiC3TFd+7wZA=="],
 
